@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - D'Xpress</title>
+    <meta name="description" content="Your personalized D'Xpress dashboard with orders, analytics, and account management">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236D28D9'%3e%3cpath d='M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z'/%3e%3c/svg%3e">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">D'Xpress</a>
+                
+                <!-- Navigation Menu -->
+                <nav class="nav" id="desktopNav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="tiktok-dashboard.html" class="nav-link">Social Commerce</a>
+                    <a href="cart.html" class="nav-link">Cart <span class="cart-count" style="display: none;"></span></a>
+                    <a href="wishlist.html" class="nav-link">Wishlist <span class="wishlist-count" style="display: none;"></span></a>
+                    <a href="orders.html" class="nav-link auth-required">Orders</a>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Theme Toggle -->
+                    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <div class="user-info" style="display: none;">
+                            <img src="" alt="User Avatar" class="user-avatar" width="32" height="32">
+                            <span class="user-name"></span>
+                            <div class="user-dropdown">
+                                <a href="dashboard.html" class="active">Dashboard</a>
+                                <a href="profile.html">Profile</a>
+                                <a href="#" onclick="logoutUser()">Logout</a>
+                            </div>
+                        </div>
+                        <div class="guest-only">
+                            <a href="login.html" class="btn btn-primary">Login</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="icon-btn" onclick="toggleMobileMenu()" style="position: absolute; top: 24px; right: 24px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        
+        <nav style="display: flex; flex-direction: column; gap: 24px; margin-top: 80px;">
+            <a href="index.html" class="nav-link" onclick="toggleMobileMenu()">Home</a>
+            <a href="tiktok-dashboard.html" class="nav-link" onclick="toggleMobileMenu()">Social Commerce</a>
+            <a href="cart.html" class="nav-link" onclick="toggleMobileMenu()">Cart</a>
+            <a href="wishlist.html" class="nav-link" onclick="toggleMobileMenu()">Wishlist</a>
+            <a href="orders.html" class="nav-link auth-required" onclick="toggleMobileMenu()">Orders</a>
+            <div class="auth-required">
+                <a href="dashboard.html" class="nav-link active" onclick="toggleMobileMenu()">Dashboard</a>
+                <a href="profile.html" class="nav-link" onclick="toggleMobileMenu()">Profile</a>
+                <a href="#" class="nav-link" onclick="logoutUser(); toggleMobileMenu()">Logout</a>
+            </div>
+            <div class="guest-only">
+                <a href="login.html" class="nav-link" onclick="toggleMobileMenu()">Login</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Welcome Section -->
+        <section class="section-sm" style="background: linear-gradient(135deg, var(--primary-500), var(--primary-700));">
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
+                    <div>
+                        <h1 style="color: white; margin-bottom: 8px;" id="welcomeTitle">Welcome back!</h1>
+                        <p style="color: rgba(255, 255, 255, 0.9);" id="welcomeSubtitle">Here's what's happening with your account today.</p>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <a href="tiktok-dashboard.html" class="btn" style="background: white; color: var(--primary-500);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            Social Commerce
+                        </a>
+                        <a href="index.html" class="btn btn-outline" style="border-color: white; color: white;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <!-- Dashboard Content -->
+                <div id="dashboardContent">
+                    <!-- Customer Dashboard -->
+                    <div id="customerDashboard" style="display: none;">
+                        <!-- Quick Stats -->
+                        <div class="grid grid-cols-4" style="margin-bottom: 32px;">
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--primary-500);" id="customerTotalOrders">0</div>
+                                <div class="text-secondary">Total Orders</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--success-500);" id="customerTotalSpent">₱0.00</div>
+                                <div class="text-secondary">Total Spent</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--warning-500);" id="customerWishlistCount">0</div>
+                                <div class="text-secondary">Wishlist Items</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--error-500);" id="customerCartItems">0</div>
+                                <div class="text-secondary">Cart Items</div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Orders & Wishlist -->
+                        <div class="grid grid-cols-2" style="gap: 32px;">
+                            <!-- Recent Orders -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>Recent Orders</h3>
+                                    <a href="orders.html" class="text-primary small">View All</a>
+                                </div>
+                                <div id="recentOrders">
+                                    <!-- Recent orders will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Wishlist -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>Wishlist</h3>
+                                    <a href="wishlist.html" class="text-primary small">View All</a>
+                                </div>
+                                <div id="wishlistItems">
+                                    <!-- Wishlist items will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommended Products -->
+                        <div class="card" style="margin-top: 32px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                <h3>Recommended for You</h3>
+                                <a href="index.html" class="text-primary small">Browse All</a>
+                            </div>
+                            <div class="grid grid-cols-4" id="recommendedProducts">
+                                <!-- Recommended products will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vendor Dashboard -->
+                    <div id="vendorDashboard" style="display: none;">
+                        <!-- Vendor Stats -->
+                        <div class="grid grid-cols-4" style="margin-bottom: 32px;">
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--primary-500);" id="vendorTotalProducts">0</div>
+                                <div class="text-secondary">My Products</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--success-500);" id="vendorTotalSales">₱0.00</div>
+                                <div class="text-secondary">Total Sales</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--warning-500);" id="vendorPendingOrders">0</div>
+                                <div class="text-secondary">Pending Orders</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--error-500);" id="vendorLowStock">0</div>
+                                <div class="text-secondary">Low Stock</div>
+                            </div>
+                        </div>
+
+                        <!-- Vendor Actions -->
+                        <div class="card" style="margin-bottom: 32px;">
+                            <h3 style="margin-bottom: 24px;">Quick Actions</h3>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <a href="product-management.html" class="btn btn-primary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    Add Product
+                                </a>
+                                <a href="analytics.html" class="btn btn-secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                                    </svg>
+                                    View Analytics
+                                </a>
+                                <a href="orders.html" class="btn btn-secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="9" cy="21" r="1"/>
+                                        <circle cx="20" cy="21" r="1"/>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                    </svg>
+                                    Manage Orders
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Recent Sales & Top Products -->
+                        <div class="grid grid-cols-2" style="gap: 32px;">
+                            <!-- Recent Sales -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>Recent Sales</h3>
+                                    <a href="orders.html" class="text-primary small">View All</a>
+                                </div>
+                                <div id="recentSales">
+                                    <!-- Recent sales will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Top Products -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>Top Products</h3>
+                                    <a href="product-management.html" class="text-primary small">Manage</a>
+                                </div>
+                                <div id="topProducts">
+                                    <!-- Top products will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Dashboard -->
+                    <div id="adminDashboard" style="display: none;">
+                        <!-- Admin Stats -->
+                        <div class="grid grid-cols-4" style="margin-bottom: 32px;">
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--primary-500);" id="adminTotalUsers">0</div>
+                                <div class="text-secondary">Total Users</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--success-500);" id="adminTotalRevenue">₱0.00</div>
+                                <div class="text-secondary">Total Revenue</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--warning-500);" id="adminTotalOrders">0</div>
+                                <div class="text-secondary">Total Orders</div>
+                            </div>
+                            <div class="card text-center">
+                                <div style="font-size: 32px; font-weight: 700; color: var(--error-500);" id="adminTotalProducts">0</div>
+                                <div class="text-secondary">Total Products</div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Actions -->
+                        <div class="card" style="margin-bottom: 32px;">
+                            <h3 style="margin-bottom: 24px;">Admin Actions</h3>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <a href="admin.html" class="btn btn-primary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                    Admin Panel
+                                </a>
+                                <a href="product-management.html" class="btn btn-secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                    </svg>
+                                    Manage Products
+                                </a>
+                                <a href="users.html" class="btn btn-secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    Manage Users
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity & System Status -->
+                        <div class="grid grid-cols-2" style="gap: 32px;">
+                            <!-- Recent Activity -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>Recent Activity</h3>
+                                    <a href="analytics.html" class="text-primary small">View All</a>
+                                </div>
+                                <div id="recentActivity">
+                                    <!-- Recent activity will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- System Status -->
+                            <div class="card">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <h3>System Status</h3>
+                                    <span class="label" style="background-color: var(--success-500); color: white;">All Systems Operational</span>
+                                </div>
+                                <div id="systemStatus">
+                                    <!-- System status will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: var(--neutral-900); padding: 48px 0; margin-top: 64px;">
+        <div class="container">
+            <div class="grid grid-cols-4" style="gap: 32px;">
+                <div>
+                    <h4 style="color: var(--primary-500); margin-bottom: 16px;">D'Xpress</h4>
+                    <p class="text-secondary">Modern real-time e-commerce platform with social commerce features and Philippine Peso currency.</p>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Quick Links</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="index.html" class="text-secondary" style="text-decoration: none;">Home</a>
+                        <a href="tiktok-dashboard.html" class="text-secondary" style="text-decoration: none;">Social Commerce</a>
+                        <a href="cart.html" class="text-secondary" style="text-decoration: none;">Cart</a>
+                        <a href="wishlist.html" class="text-secondary" style="text-decoration: none;">Wishlist</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Account</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="login.html" class="text-secondary" style="text-decoration: none;">Login</a>
+                        <a href="dashboard.html" class="text-secondary auth-required" style="text-decoration: none;">Dashboard</a>
+                        <a href="orders.html" class="text-secondary auth-required" style="text-decoration: none;">Orders</a>
+                        <a href="profile.html" class="text-secondary auth-required" style="text-decoration: none;">Profile</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Features</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <span class="text-secondary">⚡ Real-Time Updates</span>
+                        <span class="text-secondary">💱 Philippine Peso</span>
+                        <span class="text-secondary">📱 TikTok Social</span>
+                        <span class="text-secondary">📊 Live Analytics</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--neutral-800); margin-top: 32px; padding-top: 32px; text-align: center;">
+                <p class="text-secondary">&copy; 2025 D'Xpress. Built by MiniMax Agent. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Dashboard Management System
+        let dashboardData = {
+            customer: {},
+            vendor: {},
+            admin: {}
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            initializeDashboard();
+            
+            trackEvent('dashboard_viewed', {
+                user: currentUser.email,
+                role: currentUser.role
+            });
+        });
+
+        // Initialize dashboard based on user role
+        function initializeDashboard() {
+            // Update welcome message
+            updateWelcomeMessage();
+            
+            // Show appropriate dashboard
+            if (hasRole('admin')) {
+                showAdminDashboard();
+                loadAdminData();
+            } else if (hasRole('vendor')) {
+                showVendorDashboard();
+                loadVendorData();
+            } else {
+                showCustomerDashboard();
+                loadCustomerData();
+            }
+        }
+
+        // Update welcome message
+        function updateWelcomeMessage() {
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeSubtitle = document.getElementId('welcomeSubtitle');
+            
+            if (currentUser) {
+                const timeOfDay = getTimeOfDay();
+                welcomeTitle.textContent = `${timeOfDay}, ${currentUser.name}!`;
+                
+                if (hasRole('admin')) {
+                    welcomeSubtitle.textContent = 'Manage your platform and monitor system performance.';
+                } else if (hasRole('vendor')) {
+                    welcomeSubtitle.textContent = 'Track your sales and manage your products.';
+                } else {
+                    welcomeSubtitle.textContent = 'Here\'s what\'s happening with your account today.';
+                }
+            }
+        }
+
+        // Get time of day greeting
+        function getTimeOfDay() {
+            const hour = new Date().getHours();
+            if (hour < 12) return 'Good morning';
+            if (hour < 17) return 'Good afternoon';
+            return 'Good evening';
+        }
+
+        // Show customer dashboard
+        function showCustomerDashboard() {
+            document.getElementById('customerDashboard').style.display = 'block';
+            document.getElementById('vendorDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        // Show vendor dashboard
+        function showVendorDashboard() {
+            document.getElementById('customerDashboard').style.display = 'none';
+            document.getElementById('vendorDashboard').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        // Show admin dashboard
+        function showAdminDashboard() {
+            document.getElementById('customerDashboard').style.display = 'none';
+            document.getElementById('vendorDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+        }
+
+        // Load customer data
+        function loadCustomerData() {
+            // Load customer statistics
+            const customerOrders = getUserOrders();
+            const totalSpent = customerOrders.reduce((sum, order) => sum + order.total, 0);
+            const wishlistCount = wishlist.length;
+            const cartCount = getCartCount();
+            
+            document.getElementById('customerTotalOrders').textContent = customerOrders.length;
+            document.getElementById('customerTotalSpent').textContent = formatCurrency(totalSpent);
+            document.getElementById('customerWishlistCount').textContent = wishlistCount;
+            document.getElementById('customerCartItems').textContent = cartCount;
+            
+            // Load recent orders
+            loadRecentOrders(customerOrders);
+            
+            // Load wishlist items
+            loadWishlistItems();
+            
+            // Load recommended products
+            loadRecommendedProducts();
+        }
+
+        // Load vendor data
+        function loadVendorData() {
+            // Since this is a demo, we'll simulate vendor data
+            const allProducts = getProducts();
+            const vendorProducts = allProducts.slice(0, 6); // Simulate vendor products
+            const totalSales = vendorProducts.reduce((sum, product) => sum + (product.price * Math.floor(Math.random() * 20) + 5), 0);
+            const pendingOrders = Math.floor(Math.random() * 10) + 1;
+            const lowStock = vendorProducts.filter(p => p.stock < 10).length;
+            
+            document.getElementById('vendorTotalProducts').textContent = vendorProducts.length;
+            document.getElementById('vendorTotalSales').textContent = formatCurrency(totalSales);
+            document.getElementById('vendorPendingOrders').textContent = pendingOrders;
+            document.getElementById('vendorLowStock').textContent = lowStock;
+            
+            // Load recent sales (simulated)
+            loadRecentSales();
+            
+            // Load top products
+            loadTopProducts(vendorProducts);
+        }
+
+        // Load admin data
+        function loadAdminData() {
+            // Since this is a demo, we'll simulate admin data
+            const allProducts = getProducts();
+            const totalUsers = 1247; // Simulated
+            const totalRevenue = allProducts.reduce((sum, product) => sum + (product.price * Math.floor(Math.random() * 50) + 10), 0);
+            const totalOrders = Math.floor(Math.random() * 500) + 100;
+            
+            document.getElementById('adminTotalUsers').textContent = totalUsers.toLocaleString();
+            document.getElementById('adminTotalRevenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('adminTotalOrders').textContent = totalOrders.toLocaleString();
+            document.getElementById('adminTotalProducts').textContent = allProducts.length;
+            
+            // Load recent activity
+            loadRecentActivity();
+            
+            // Load system status
+            loadSystemStatus();
+        }
+
+        // Load recent orders
+        function loadRecentOrders(orders) {
+            const container = document.getElementById('recentOrders');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" stroke-width="1" style="margin: 0 auto 16px;">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <p class="text-secondary">No orders yet</p>
+                        <a href="index.html" class="btn btn-primary btn-sm">Start Shopping</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recentOrders = orders.slice(0, 5);
+            container.innerHTML = recentOrders.map(order => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--neutral-800);">
+                    <div>
+                        <div style="font-weight: 600;">Order #${order.id}</div>
+                        <div class="small text-secondary">${new Date(order.date).toLocaleDateString()}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: var(--primary-500);">${formatCurrency(order.total)}</div>
+                        <span class="label" style="background-color: var(--success-500); color: white; font-size: 10px;">${order.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load wishlist items
+        function loadWishlistItems() {
+            const container = document.getElementById('wishlistItems');
+            
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" stroke-width="1" style="margin: 0 auto 16px;">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <p class="text-secondary">Your wishlist is empty</p>
+                        <a href="index.html" class="btn btn-primary btn-sm">Discover Products</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            const wishlistProducts = wishlist.map(id => getProductById(id)).filter(p => p);
+            const recentWishlist = wishlistProducts.slice(0, 5);
+            
+            container.innerHTML = recentWishlist.map(product => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--neutral-800);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${product.image}" alt="${product.name}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px;">${product.name}</div>
+                            <div class="small text-secondary">${product.category}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-weight: 600; color: var(--primary-500);">${formatCurrency(product.price)}</span>
+                        <button class="icon-btn icon-btn-sm" onclick="addToCart(${product.id})" title="Add to cart">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load recommended products
+        function loadRecommendedProducts() {
+            const container = document.getElementById('recommendedProducts');
+            const products = getProducts().slice(0, 4);
+            
+            container.innerHTML = products.map(product => `
+                <div class="card hover-lift" style="padding: 16px; cursor: pointer;" onclick="viewProduct(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--border-radius-sm); margin-bottom: 12px;">
+                    <h5 style="margin-bottom: 8px; font-size: 14px;">${product.name}</h5>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--primary-500); font-weight: 600;">${formatCurrency(product.price)}</span>
+                        <button class="icon-btn icon-btn-sm" onclick="event.stopPropagation(); addToCart(${product.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load recent sales (vendor)
+        function loadRecentSales() {
+            const container = document.getElementById('recentSales');
+            
+            const sales = [
+                { id: 'DX123456789', customer: 'John D.', amount: formatCurrency(299.99), date: '2025-11-18', status: 'completed' },
+                { id: 'DX123456788', customer: 'Sarah M.', amount: formatCurrency(149.99), date: '2025-11-17', status: 'shipped' },
+                { id: 'DX123456787', customer: 'Mike R.', amount: formatCurrency(499.99), date: '2025-11-16', status: 'processing' }
+            ];
+            
+            container.innerHTML = sales.map(sale => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--neutral-800);">
+                    <div>
+                        <div style="font-weight: 600;">${sale.id}</div>
+                        <div class="small text-secondary">${sale.customer} • ${sale.date}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: var(--primary-500);">${sale.amount}</div>
+                        <span class="label" style="background-color: var(--success-500); color: white; font-size: 10px;">${sale.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load top products (vendor)
+        function loadTopProducts(products) {
+            const container = document.getElementById('topProducts');
+            const topProducts = products.slice(0, 4);
+            
+            container.innerHTML = topProducts.map(product => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--neutral-800);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${product.image}" alt="${product.name}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px;">${product.name}</div>
+                            <div class="small text-secondary">${product.stock} in stock</div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: var(--primary-500);">${formatCurrency(product.price)}</div>
+                        <div class="small text-secondary">${Math.floor(Math.random() * 50) + 10} sold</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load recent activity (admin)
+        function loadRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            
+            const activities = [
+                { action: 'New user registered', user: 'john.doe@email.com', time: '2 minutes ago' },
+                { action: 'Order completed', user: 'Order #DX123456789', time: '15 minutes ago' },
+                { action: 'Product added', user: 'vendor@designxpress.com', time: '1 hour ago' },
+                { action: 'Payment processed', user: 'sarah.smith@email.com', time: '2 hours ago' },
+                { action: 'User account verified', user: 'mike.johnson@email.com', time: '3 hours ago' }
+            ];
+            
+            container.innerHTML = activities.map(activity => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--neutral-800);">
+                    <div>
+                        <div style="font-weight: 500; font-size: 14px;">${activity.action}</div>
+                        <div class="small text-secondary">${activity.user}</div>
+                    </div>
+                    <div class="small text-secondary">${activity.time}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load system status (admin)
+        function loadSystemStatus() {
+            const container = document.getElementById('systemStatus');
+            
+            const systemComponents = [
+                { name: 'Database', status: 'operational', uptime: '99.9%' },
+                { name: 'Payment Gateway', status: 'operational', uptime: '99.8%' },
+                { name: 'Email Service', status: 'operational', uptime: '99.7%' },
+                { name: 'CDN', status: 'operational', uptime: '99.9%' },
+                { name: 'Analytics', status: 'operational', uptime: '99.6%' }
+            ];
+            
+            container.innerHTML = systemComponents.map(component => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--neutral-800);">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--success-500);"></div>
+                        <span style="font-weight: 500;">${component.name}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="small text-secondary">${component.uptime} uptime</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Utility functions
+        function viewProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('dx_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('open');
+        }
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('dx_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+
+        console.log('📊 Dashboard loaded successfully!');
+        console.log('👤 Role-based dashboard ready');
+        console.log('⚡ Real-time data updates');
+        console.log('💱 Philippine Peso statistics');
+    </script>
+</body>
+</html>

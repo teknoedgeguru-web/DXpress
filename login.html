@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - D'Xpress</title>
+    <meta name="description" content="Login to your D'Xpress account to access your dashboard, orders, and personalized shopping experience">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236D28D9'%3e%3cpath d='M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z'/%3e%3c/svg%3e">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">D'Xpress</a>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <a href="index.html" class="btn btn-ghost">← Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 48px 0;">
+        <div class="container">
+            <div style="max-width: 400px; margin: 0 auto;">
+                <!-- Login Card -->
+                <div class="card" style="padding: 48px;">
+                    <!-- Header -->
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <h1 style="margin-bottom: 8px;">Welcome Back</h1>
+                        <p class="text-secondary">Sign in to your D'Xpress account</p>
+                    </div>
+
+                    <!-- Demo Accounts Info -->
+                    <div style="background-color: var(--neutral-800); border-radius: var(--border-radius-md); padding: 16px; margin-bottom: 24px;">
+                        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--primary-500);">Demo Accounts</h4>
+                        <div style="font-size: 12px; line-height: 1.5;">
+                            <div style="margin-bottom: 8px;">
+                                <strong>Customer:</strong> customer@designxpress.com / customer123
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <strong>Vendor:</strong> vendor@designxpress.com / vendor123
+                            </div>
+                            <div>
+                                <strong>Admin:</strong> admin@designxpress.com / admin123
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <div style="position: relative;">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="form-input" 
+                                    placeholder="Enter your password"
+                                    required
+                                >
+                                <button 
+                                    type="button" 
+                                    class="icon-btn" 
+                                    onclick="togglePassword()" 
+                                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);"
+                                    title="Toggle password visibility"
+                                >
+                                    <svg id="passwordIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="rememberMe" name="rememberMe" style="width: auto;">
+                                <span class="small">Remember me</span>
+                            </label>
+                            <a href="#" class="small text-primary">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 16px;" id="loginBtn">
+                            <span id="loginBtnText">Sign In</span>
+                            <div id="loginBtnLoading" class="loading" style="display: none;"></div>
+                        </button>
+
+                        <div class="text-center">
+                            <p class="small text-secondary">
+                                Don't have an account? 
+                                <a href="#" class="text-primary" onclick="showSignup()">Sign up here</a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Social Login -->
+                    <div style="margin-top: 32px;">
+                        <div style="text-align: center; margin-bottom: 16px;">
+                            <span class="small text-secondary">Or continue with</span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary" style="flex: 1;" onclick="socialLogin('google')">
+                                <svg width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                Google
+                            </button>
+                            <button class="btn btn-secondary" style="flex: 1;" onclick="socialLogin('facebook')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                Facebook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div style="margin-top: 48px; text-align: center;">
+                    <h3 style="margin-bottom: 24px;">Why Choose D'Xpress?</h3>
+                    <div class="grid grid-cols-3" style="gap: 16px;">
+                        <div>
+                            <div style="width: 48px; height: 48px; background-color: var(--primary-500); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/>
+                                    <polyline points="17,6 23,6 23,12"/>
+                                </svg>
+                            </div>
+                            <h5 style="font-size: 14px; margin-bottom: 4px;">Real-Time Updates</h5>
+                            <p class="small text-secondary">Live synchronization across all your devices</p>
+                        </div>
+                        
+                        <div>
+                            <div style="width: 48px; height: 48px; background-color: var(--success-500); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <h5 style="font-size: 14px; margin-bottom: 4px;">₱ Philippine Peso</h5>
+                            <p class="small text-secondary">Complete currency localization</p>
+                        </div>
+                        
+                        <div>
+                            <div style="width: 48px; height: 48px; background-color: var(--warning-500); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <h5 style="font-size: 14px; margin-bottom: 4px;">Social Commerce</h5>
+                            <p class="small text-secondary">TikTok-style shopping experience</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: var(--neutral-900); padding: 32px 0; margin-top: 48px;">
+        <div class="container">
+            <div style="text-align: center;">
+                <p class="text-secondary">&copy; 2025 D'Xpress. Built by MiniMax Agent. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Login functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Redirect if already logged in
+            if (isLoggedIn()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Track page view
+            trackEvent('login_page_viewed', {
+                timestamp: new Date().toISOString()
+            });
+
+            // Pre-fill with demo account for convenience
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('password');
+            
+            // Add click handlers for demo accounts
+            addDemoAccountHandlers();
+        });
+
+        // Add demo account click handlers
+        function addDemoAccountHandlers() {
+            const demoAccounts = document.querySelectorAll('[data-email][data-password]');
+            
+            demoAccounts.forEach(account => {
+                account.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const email = this.getAttribute('data-email');
+                    const password = this.getAttribute('data-password');
+                    
+                    document.getElementById('email').value = email;
+                    document.getElementById('password').value = password;
+                });
+            });
+        }
+
+        // Handle login form submission
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            // Validate input
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+            const loginBtnLoading = document.getElementById('loginBtnLoading');
+            
+            loginBtn.disabled = true;
+            loginBtnText.style.display = 'none';
+            loginBtnLoading.style.display = 'inline-block';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                try {
+                    const user = loginUser(email, password);
+                    
+                    if (user) {
+                        // Track successful login
+                        trackEvent('user_login', {
+                            email: email,
+                            role: user.role,
+                            rememberMe: rememberMe
+                        });
+                        
+                        // Store remember me preference
+                        if (rememberMe) {
+                            localStorage.setItem('dx_remember_email', email);
+                        } else {
+                            localStorage.removeItem('dx_remember_email');
+                        }
+                        
+                        // Redirect to appropriate page
+                        const redirectUrl = getRedirectUrl(user.role);
+                        setTimeout(() => {
+                            window.location.href = redirectUrl;
+                        }, 1500);
+                    } else {
+                        // Track failed login
+                        trackEvent('login_failed', {
+                            email: email,
+                            reason: 'invalid_credentials'
+                        });
+                        
+                        // Show error state
+                        showLoginError('Invalid email or password. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showLoginError('An error occurred. Please try again.');
+                    
+                    trackEvent('login_error', {
+                        email: email,
+                        error: error.message
+                    });
+                } finally {
+                    // Reset loading state
+                    loginBtn.disabled = false;
+                    loginBtnText.style.display = 'inline';
+                    loginBtnLoading.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        // Show login error
+        function showLoginError(message) {
+            showNotification(message, 'error');
+            
+            // Add error styling to form
+            const form = document.getElementById('loginForm');
+            form.style.animation = 'shake 0.5s ease-in-out';
+            
+            setTimeout(() => {
+                form.style.animation = '';
+            }, 500);
+        }
+
+        // Get redirect URL based on user role
+        function getRedirectUrl(role) {
+            const currentPage = sessionStorage.getItem('dx_current_page') || 'dashboard.html';
+            sessionStorage.removeItem('dx_current_page');
+            
+            switch (role) {
+                case 'admin':
+                    return 'admin.html';
+                case 'vendor':
+                    return 'dashboard.html';
+                case 'customer':
+                default:
+                    return currentPage.includes('admin') ? 'dashboard.html' : currentPage;
+            }
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+            } else {
+                passwordField.type = 'password';
+                passwordIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+            }
+        }
+
+        // Social login (demo)
+        function socialLogin(provider) {
+            showNotification(`${provider} login is currently in demo mode`, 'info');
+            
+            trackEvent('social_login_attempt', {
+                provider: provider
+            });
+        }
+
+        // Show signup form
+        function showSignup() {
+            showNotification('Sign up functionality coming soon!', 'info');
+            
+            trackEvent('signup_viewed', {
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Add shake animation to CSS
+        const shakeKeyframes = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = shakeKeyframes;
+        document.head.appendChild(styleSheet);
+
+        // Auto-fill remember email
+        const rememberedEmail = localStorage.getItem('dx_remember_email');
+        if (rememberedEmail) {
+            document.getElementById('email').value = rememberedEmail;
+            document.getElementById('rememberMe').checked = true;
+        }
+
+        // Focus email field on load
+        document.getElementById('email').focus();
+    </script>
+</body>
+</html>

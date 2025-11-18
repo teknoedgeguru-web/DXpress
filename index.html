@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'Xpress - Modern Real-Time E-Commerce Platform</title>
+    <meta name="description" content="D'Xpress: The ultimate e-commerce platform with real-time features, TikTok-style social commerce, and Philippine Peso currency">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/tiktok-dashboard.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236D28D9'%3e%3cpath d='M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z'/%3e%3c/svg%3e">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">D'Xpress</a>
+                
+                <!-- Navigation Menu -->
+                <nav class="nav" id="desktopNav">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="tiktok-dashboard.html" class="nav-link">Social Commerce</a>
+                    <a href="cart.html" class="nav-link">Cart <span class="cart-count" style="display: none;"></span></a>
+                    <a href="wishlist.html" class="nav-link">Wishlist <span class="wishlist-count" style="display: none;"></span></a>
+                    <a href="orders.html" class="nav-link auth-required">Orders</a>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Theme Toggle -->
+                    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- Search Button -->
+                    <button class="icon-btn" onclick="scrollToSearch()" title="Search products">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <div class="user-info" style="display: none;">
+                            <img src="" alt="User Avatar" class="user-avatar" width="32" height="32">
+                            <span class="user-name"></span>
+                            <div class="user-dropdown">
+                                <a href="dashboard.html">Dashboard</a>
+                                <a href="profile.html">Profile</a>
+                                <a href="#" onclick="logoutUser()">Logout</a>
+                            </div>
+                        </div>
+                        <div class="guest-only">
+                            <a href="login.html" class="btn btn-primary">Login</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="icon-btn" onclick="toggleMobileMenu()" style="position: absolute; top: 24px; right: 24px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        
+        <nav style="display: flex; flex-direction: column; gap: 24px; margin-top: 80px;">
+            <a href="index.html" class="nav-link" onclick="toggleMobileMenu()">Home</a>
+            <a href="tiktok-dashboard.html" class="nav-link" onclick="toggleMobileMenu()">Social Commerce</a>
+            <a href="cart.html" class="nav-link" onclick="toggleMobileMenu()">Cart</a>
+            <a href="wishlist.html" class="nav-link" onclick="toggleMobileMenu()">Wishlist</a>
+            <a href="orders.html" class="nav-link auth-required" onclick="toggleMobileMenu()">Orders</a>
+            <div class="auth-required">
+                <a href="dashboard.html" class="nav-link" onclick="toggleMobileMenu()">Dashboard</a>
+                <a href="profile.html" class="nav-link" onclick="toggleMobileMenu()">Profile</a>
+                <a href="#" class="nav-link" onclick="logoutUser(); toggleMobileMenu()">Logout</a>
+            </div>
+            <div class="guest-only">
+                <a href="login.html" class="nav-link" onclick="toggleMobileMenu()">Login</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="section">
+            <div class="container">
+                <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                    <h1 style="background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px;">
+                        Welcome to D'Xpress
+                    </h1>
+                    <p class="text-secondary" style="font-size: 20px; margin-bottom: 32px;">
+                        Your ultimate destination for modern e-commerce with real-time features, 
+                        social commerce, and premium products in Philippine Peso currency.
+                    </p>
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <a href="#products" class="btn btn-primary btn-lg">Shop Now</a>
+                        <a href="tiktok-dashboard.html" class="btn btn-outline btn-lg">Social Commerce</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Highlight -->
+        <section class="section-sm" style="background-color: var(--neutral-900);">
+            <div class="container">
+                <div class="grid grid-cols-4" style="gap: 32px;">
+                    <div class="text-center">
+                        <div style="width: 64px; height: 64px; background-color: var(--primary-500); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/>
+                                <polyline points="17,6 23,6 23,12"/>
+                            </svg>
+                        </div>
+                        <h3>Real-Time Updates</h3>
+                        <p class="text-secondary">Live synchronization across all devices and users</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div style="width: 64px; height: 64px; background-color: var(--success-500); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <h3>₱ Philippine Peso</h3>
+                        <p class="text-secondary">Complete localization with proper currency formatting</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div style="width: 64px; height: 64px; background-color: var(--warning-500); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h3>TikTok Social</h3>
+                        <p class="text-secondary">Revolutionary social commerce experience</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div style="width: 64px; height: 64px; background-color: var(--error-500); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+                            </svg>
+                        </div>
+                        <h3>Live Analytics</h3>
+                        <p class="text-secondary">Real-time business intelligence and insights</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <section class="section" id="products">
+            <div class="container">
+                <div class="search-container">
+                    <h2 class="text-center" style="margin-bottom: 24px;">Discover Premium Products</h2>
+                    
+                    <!-- Search Input -->
+                    <div class="search-input-container">
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="searchInput"
+                            placeholder="Search for products, categories, or features..."
+                            oninput="handleSearch(this.value)"
+                        >
+                    </div>
+                    
+                    <!-- Filter Bar -->
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label class="filter-label">Category:</label>
+                            <select class="filter-select" id="categoryFilter" onchange="handleCategoryFilter(this.value)">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label class="filter-label">Sort by:</label>
+                            <select class="filter-select" id="sortFilter" onchange="handleSortFilter(this.value)">
+                                <option value="name">Name</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Rating</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear Filters</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Info -->
+                    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <span class="text-secondary" id="resultsInfo">Loading products...</span>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span class="text-secondary">View:</span>
+                            <button class="icon-btn icon-btn-sm" id="gridView" onclick="setView('grid')" title="Grid view">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            </button>
+                            <button class="icon-btn icon-btn-sm" id="listView" onclick="setView('list')" title="List view">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="8" y1="6" x2="21" y2="6"/>
+                                    <line x1="8" y1="12" x2="21" y2="12"/>
+                                    <line x1="8" y1="18" x2="21" y2="18"/>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="section-sm">
+            <div class="container">
+                <div class="product-grid" id="productGrid">
+                    <!-- Products will be dynamically loaded here -->
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loadingState" style="text-align: center; padding: 48px;">
+                    <div class="loading" style="width: 40px; height: 40px; margin: 0 auto 16px;"></div>
+                    <p class="text-secondary">Loading premium products...</p>
+                </div>
+                
+                <!-- No Results -->
+                <div id="noResults" style="text-align: center; padding: 48px; display: none;">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" stroke-width="1" style="margin: 0 auto 16px;">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <h3>No products found</h3>
+                    <p class="text-secondary">Try adjusting your search or filters</p>
+                    <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="section" style="background: linear-gradient(135deg, var(--primary-500), var(--primary-700));">
+            <div class="container">
+                <div style="text-align: center; color: white;">
+                    <h2 style="color: white; margin-bottom: 16px;">Ready to Experience the Future of E-Commerce?</h2>
+                    <p style="font-size: 18px; margin-bottom: 32px; opacity: 0.9;">
+                        Join thousands of users enjoying real-time features, social commerce, and premium shopping experience.
+                    </p>
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <a href="tiktok-dashboard.html" class="btn" style="background: white; color: var(--primary-500);">Try Social Commerce</a>
+                        <a href="login.html" class="btn btn-outline" style="border-color: white; color: white;">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: var(--neutral-900); padding: 48px 0; margin-top: 64px;">
+        <div class="container">
+            <div class="grid grid-cols-4" style="gap: 32px;">
+                <div>
+                    <h4 style="color: var(--primary-500); margin-bottom: 16px;">D'Xpress</h4>
+                    <p class="text-secondary">Modern real-time e-commerce platform with social commerce features and Philippine Peso currency.</p>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Quick Links</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="index.html" class="text-secondary" style="text-decoration: none;">Home</a>
+                        <a href="tiktok-dashboard.html" class="text-secondary" style="text-decoration: none;">Social Commerce</a>
+                        <a href="cart.html" class="text-secondary" style="text-decoration: none;">Cart</a>
+                        <a href="wishlist.html" class="text-secondary" style="text-decoration: none;">Wishlist</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Account</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="login.html" class="text-secondary" style="text-decoration: none;">Login</a>
+                        <a href="dashboard.html" class="text-secondary auth-required" style="text-decoration: none;">Dashboard</a>
+                        <a href="orders.html" class="text-secondary auth-required" style="text-decoration: none;">Orders</a>
+                        <a href="profile.html" class="text-secondary auth-required" style="text-decoration: none;">Profile</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Features</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <span class="text-secondary">⚡ Real-Time Updates</span>
+                        <span class="text-secondary">💱 Philippine Peso</span>
+                        <span class="text-secondary">📱 TikTok Social</span>
+                        <span class="text-secondary">📊 Live Analytics</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--neutral-800); margin-top: 32px; padding-top: 32px; text-align: center;">
+                <p class="text-secondary">&copy; 2025 D'Xpress. Built by MiniMax Agent. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Page-specific functionality
+        let currentView = 'grid';
+        let filteredProducts = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFilters();
+            loadAndDisplayProducts();
+            
+            // Track page view
+            trackEvent('homepage_viewed', {
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Initialize filters
+        function initializeFilters() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = getCategories();
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        // Load and display products
+        function loadAndDisplayProducts() {
+            const productGrid = document.getElementById('productGrid');
+            const loadingState = document.getElementById('loadingState');
+            const noResults = document.getElementById('noResults');
+            
+            // Show loading
+            loadingState.style.display = 'block';
+            productGrid.style.display = 'none';
+            noResults.style.display = 'none';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                const searchQuery = document.getElementById('searchInput').value;
+                const categoryFilter = document.getElementById('categoryFilter').value;
+                const sortFilter = document.getElementById('sortFilter').value;
+                
+                filteredProducts = filterAndSortProducts(searchQuery, categoryFilter, sortFilter);
+                
+                updateResultsInfo();
+                
+                if (filteredProducts.length === 0) {
+                    loadingState.style.display = 'none';
+                    noResults.style.display = 'block';
+                } else {
+                    displayProducts(filteredProducts);
+                    loadingState.style.display = 'none';
+                    productGrid.style.display = 'grid';
+                }
+            }, 500);
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const productGrid = document.getElementById('productGrid');
+            
+            productGrid.innerHTML = products.map(product => `
+                <div class="product-card hover-lift" onclick="viewProduct(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <h4 class="product-name">${product.name}</h4>
+                        <p class="text-secondary" style="font-size: 14px; margin-bottom: 16px; line-height: 1.4;">
+                            ${product.description}
+                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <span class="product-price">${formatCurrency(product.price)}</span>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--warning-500)" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                                </svg>
+                                <span style="font-size: 14px; font-weight: 500;">${product.rating}</span>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary btn-add-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                </svg>
+                                Add to Cart
+                            </button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); toggleWishlist(${product.id})" title="${isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="${isInWishlist(product.id) ? 'var(--error-500)' : 'none'}" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 4px;">
+                            ${product.features.slice(0, 3).map(feature => `
+                                <span class="label" style="background-color: var(--neutral-800); color: var(--neutral-400); padding: 4px 8px; border-radius: 4px;">${feature}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update results info
+        function updateResultsInfo() {
+            const resultsInfo = document.getElementById('resultsInfo');
+            const count = filteredProducts.length;
+            resultsInfo.textContent = `${count} product${count !== 1 ? 's' : ''} found`;
+        }
+
+        // Event handlers
+        function handleSearch(query) {
+            loadAndDisplayProducts();
+        }
+
+        function handleCategoryFilter(category) {
+            loadAndDisplayProducts();
+        }
+
+        function handleSortFilter(sortBy) {
+            loadAndDisplayProducts();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('sortFilter').value = 'name';
+            loadAndDisplayProducts();
+        }
+
+        function setView(view) {
+            currentView = view;
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            
+            if (view === 'grid') {
+                gridView.style.backgroundColor = 'var(--primary-500)';
+                listView.style.backgroundColor = 'var(--neutral-800)';
+                document.querySelector('.product-grid').style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
+            } else {
+                gridView.style.backgroundColor = 'var(--neutral-800)';
+                listView.style.backgroundColor = 'var(--primary-500)';
+                document.querySelector('.product-grid').style.gridTemplateColumns = '1fr';
+            }
+        }
+
+        // Navigation functions
+        function viewProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
+        }
+
+        function scrollToSearch() {
+            document.getElementById('searchInput').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('searchInput').focus();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('dx_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('open');
+        }
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('dx_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

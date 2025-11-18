@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - D'Xpress</title>
+    <meta name="description" content="Review and manage items in your D'Xpress shopping cart. Proceed to checkout with Philippine Peso pricing and real-time updates">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236D28D9'%3e%3cpath d='M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z'/%3e%3c/svg%3e">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <a href="index.html" class="logo">D'Xpress</a>
+                
+                <!-- Navigation Menu -->
+                <nav class="nav" id="desktopNav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="tiktok-dashboard.html" class="nav-link">Social Commerce</a>
+                    <a href="cart.html" class="nav-link active">Cart <span class="cart-count" style="display: none;"></span></a>
+                    <a href="wishlist.html" class="nav-link">Wishlist <span class="wishlist-count" style="display: none;"></span></a>
+                    <a href="orders.html" class="nav-link auth-required">Orders</a>
+                </nav>
+                
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- Theme Toggle -->
+                    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <div class="user-info" style="display: none;">
+                            <img src="" alt="User Avatar" class="user-avatar" width="32" height="32">
+                            <span class="user-name"></span>
+                            <div class="user-dropdown">
+                                <a href="dashboard.html">Dashboard</a>
+                                <a href="profile.html">Profile</a>
+                                <a href="#" onclick="logoutUser()">Logout</a>
+                            </div>
+                        </div>
+                        <div class="guest-only">
+                            <a href="login.html" class="btn btn-primary">Login</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="icon-btn" onclick="toggleMobileMenu()" style="position: absolute; top: 24px; right: 24px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        
+        <nav style="display: flex; flex-direction: column; gap: 24px; margin-top: 80px;">
+            <a href="index.html" class="nav-link" onclick="toggleMobileMenu()">Home</a>
+            <a href="tiktok-dashboard.html" class="nav-link" onclick="toggleMobileMenu()">Social Commerce</a>
+            <a href="cart.html" class="nav-link active" onclick="toggleMobileMenu()">Cart</a>
+            <a href="wishlist.html" class="nav-link" onclick="toggleMobileMenu()">Wishlist</a>
+            <a href="orders.html" class="nav-link auth-required" onclick="toggleMobileMenu()">Orders</a>
+            <div class="auth-required">
+                <a href="dashboard.html" class="nav-link" onclick="toggleMobileMenu()">Dashboard</a>
+                <a href="profile.html" class="nav-link" onclick="toggleMobileMenu()">Profile</a>
+                <a href="#" class="nav-link" onclick="logoutUser(); toggleMobileMenu()">Logout</a>
+            </div>
+            <div class="guest-only">
+                <a href="login.html" class="nav-link" onclick="toggleMobileMenu()">Login</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <section class="section">
+            <div class="container">
+                <!-- Page Header -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h1>Shopping Cart</h1>
+                        <p class="text-secondary">Review your items and proceed to checkout</p>
+                    </div>
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <span class="text-secondary" id="cartSummary">Loading...</span>
+                        <button class="btn btn-ghost btn-sm" onclick="clearCart()" id="clearCartBtn" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                            Clear Cart
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cart-container">
+                    <!-- Cart Items -->
+                    <div id="cartItems">
+                        <!-- Cart items will be dynamically loaded here -->
+                    </div>
+
+                    <!-- Empty Cart State -->
+                    <div id="emptyCart" style="display: none; text-align: center; padding: 64px 32px;">
+                        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--neutral-400)" stroke-width="1" style="margin: 0 auto 24px;">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <h3 style="margin-bottom: 16px;">Your cart is empty</h3>
+                        <p class="text-secondary" style="margin-bottom: 32px;">Discover amazing products and add them to your cart</p>
+                        <a href="index.html" class="btn btn-primary btn-lg">Start Shopping</a>
+                    </div>
+
+                    <!-- Promo Code Section -->
+                    <div id="promoSection" style="margin-top: 32px; display: none;">
+                        <div class="card" style="padding: 24px;">
+                            <h4 style="margin-bottom: 16px;">Promo Code</h4>
+                            <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                                <input 
+                                    type="text" 
+                                    id="promoCode" 
+                                    class="form-input" 
+                                    placeholder="Enter promo code"
+                                    style="flex: 1;"
+                                >
+                                <button class="btn btn-secondary" onclick="applyPromoCode()">Apply</button>
+                            </div>
+                            
+                            <!-- Available Promo Codes -->
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <button class="btn btn-ghost btn-sm" onclick="setPromoCode('SAVE10')">SAVE10</button>
+                                <button class="btn btn-ghost btn-sm" onclick="setPromoCode('SAVE20')">SAVE20</button>
+                                <button class="btn btn-ghost btn-sm" onclick="setPromoCode('FLAT50')">FLAT50</button>
+                                <button class="btn btn-ghost btn-sm" onclick="setPromoCode('WELCOME')">WELCOME</button>
+                            </div>
+                            
+                            <!-- Applied Promo Code -->
+                            <div id="appliedPromo" style="margin-top: 16px; display: none; padding: 12px; background-color: var(--success-500); color: white; border-radius: var(--border-radius-sm);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <strong id="promoName"></strong>
+                                        <div class="small" id="promoDescription"></div>
+                                    </div>
+                                    <button onclick="removePromoCode()" style="background: none; border: none; color: white; cursor: pointer;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="18" y1="6" x2="6" y2="18"/>
+                                            <line x1="6" y1="6" x2="18" y2="18"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary -->
+                    <div id="cartSummarySection" style="display: none;">
+                        <div class="cart-summary">
+                            <h4 style="margin-bottom: 24px;">Order Summary</h4>
+                            
+                            <div class="summary-row">
+                                <span>Subtotal (<span id="itemCount">0</span> items)</span>
+                                <span id="subtotal">₱0.00</span>
+                            </div>
+                            
+                            <div class="summary-row" id="discountRow" style="display: none;">
+                                <span>Discount</span>
+                                <span style="color: var(--success-500);" id="discount">-₱0.00</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>Shipping</span>
+                                <span id="shipping">₱50.00</span>
+                            </div>
+                            
+                            <div class="summary-row">
+                                <span>Tax (12%)</span>
+                                <span id="tax">₱0.00</span>
+                            </div>
+                            
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span id="total">₱0.00</span>
+                            </div>
+                            
+                            <!-- Checkout Button -->
+                            <button class="btn btn-primary btn-lg" style="width: 100%; margin-top: 24px;" onclick="proceedToCheckout()" id="checkoutBtn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4"/>
+                                    <circle cx="9" cy="21" r="1"/>
+                                    <circle cx="20" cy="21" r="1"/>
+                                </svg>
+                                Proceed to Checkout
+                            </button>
+                            
+                            <!-- Security Features -->
+                            <div style="margin-top: 16px; text-align: center;">
+                                <div style="display: flex; justify-content: center; gap: 16px; font-size: 12px; color: var(--neutral-400);">
+                                    <span>🔒 Secure Checkout</span>
+                                    <span>⚡ Real-time Updates</span>
+                                    <span>💱 PHP Currency</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Products -->
+                    <div id="recommendations" style="margin-top: 48px; display: none;">
+                        <h4 style="margin-bottom: 24px;">You might also like</h4>
+                        <div class="grid grid-cols-4" id="recommendedProducts">
+                            <!-- Recommendations will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: var(--neutral-900); padding: 48px 0; margin-top: 64px;">
+        <div class="container">
+            <div class="grid grid-cols-4" style="gap: 32px;">
+                <div>
+                    <h4 style="color: var(--primary-500); margin-bottom: 16px;">D'Xpress</h4>
+                    <p class="text-secondary">Modern real-time e-commerce platform with social commerce features and Philippine Peso currency.</p>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Quick Links</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="index.html" class="text-secondary" style="text-decoration: none;">Home</a>
+                        <a href="tiktok-dashboard.html" class="text-secondary" style="text-decoration: none;">Social Commerce</a>
+                        <a href="cart.html" class="text-secondary" style="text-decoration: none;">Cart</a>
+                        <a href="wishlist.html" class="text-secondary" style="text-decoration: none;">Wishlist</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Account</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="login.html" class="text-secondary" style="text-decoration: none;">Login</a>
+                        <a href="dashboard.html" class="text-secondary auth-required" style="text-decoration: none;">Dashboard</a>
+                        <a href="orders.html" class="text-secondary auth-required" style="text-decoration: none;">Orders</a>
+                        <a href="profile.html" class="text-secondary auth-required" style="text-decoration: none;">Profile</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 style="margin-bottom: 16px;">Features</h5>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <span class="text-secondary">⚡ Real-Time Updates</span>
+                        <span class="text-secondary">💱 Philippine Peso</span>
+                        <span class="text-secondary">📱 TikTok Social</span>
+                        <span class="text-secondary">📊 Live Analytics</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--neutral-800); margin-top: 32px; padding-top: 32px; text-align: center;">
+                <p class="text-secondary">&copy; 2025 D'Xpress. Built by MiniMax Agent. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let appliedPromoCode = null;
+        let recommendedProducts = [];
+
+        // Initialize cart page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCartPage();
+            
+            // Track page view
+            trackEvent('cart_page_viewed', {
+                timestamp: new Date().toISOString(),
+                user: currentUser?.email || 'guest'
+            });
+        });
+
+        // Load and display cart page
+        function loadCartPage() {
+            displayCartItems();
+            displayRecommendations();
+            updateCartSummary();
+            
+            // Show/hide sections based on cart state
+            const hasItems = cart.length > 0;
+            
+            document.getElementById('cartItems').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('emptyCart').style.display = hasItems ? 'none' : 'block';
+            document.getElementById('cartSummarySection').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('promoSection').style.display = hasItems ? 'block' : 'none';
+            document.getElementById('recommendations').style.display = hasItems ? 'block' : 'none';
+            
+            document.getElementById('clearCartBtn').style.display = hasItems ? 'flex' : 'none';
+        }
+
+        // Display cart items
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '';
+                return;
+            }
+            
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image" loading="lazy">
+                    
+                    <div class="cart-item-info">
+                        <h4 class="cart-item-name">${item.name}</h4>
+                        <p class="text-secondary small">${item.category}</p>
+                        <div style="margin-top: 8px;">
+                            <span class="cart-item-price">${formatCurrency(item.price)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-item-controls">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})" ${item.quantity <= 1 ? 'disabled' : ''}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                            </button>
+                            
+                            <input 
+                                type="number" 
+                                class="quantity-input" 
+                                value="${item.quantity}" 
+                                min="1" 
+                                max="99"
+                                onchange="updateQuantity(${item.id}, parseInt(this.value))"
+                            >
+                            
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="text-align: right;">
+                            <div style="font-size: 18px; font-weight: 700; color: var(--primary-500);">
+                                ${formatCurrency(item.price * item.quantity)}
+                            </div>
+                            <div class="small text-secondary">
+                                ${formatCurrency(item.price)} × ${item.quantity}
+                            </div>
+                        </div>
+                        
+                        <button class="icon-btn" onclick="removeFromCart(${item.id})" title="Remove item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3,6 5,6 21,6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update item quantity
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            if (newQuantity > 99) {
+                showNotification('Maximum quantity is 99', 'warning');
+                return;
+            }
+            
+            updateCartQuantity(productId, newQuantity);
+            loadCartPage();
+            
+            trackEvent('cart_quantity_updated', {
+                productId: productId,
+                newQuantity: newQuantity,
+                user: currentUser?.email || 'guest'
+            });
+        }
+
+        // Update cart summary
+        function updateCartSummary() {
+            const subtotal = getCartTotal();
+            const discount = appliedPromoCode ? calculateDiscount(subtotal, appliedPromoCode) : 0;
+            const shipping = subtotal > 1000 ? 0 : 50; // Free shipping over ₱1000
+            const taxableAmount = subtotal - discount;
+            const tax = taxableAmount * 0.12; // 12% tax
+            const total = taxableAmount + shipping + tax;
+            
+            // Update summary display
+            document.getElementById('itemCount').textContent = getCartCount();
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('shipping').textContent = formatCurrency(shipping);
+            document.getElementById('tax').textContent = formatCurrency(tax);
+            document.getElementById('total').textContent = formatCurrency(total);
+            
+            // Update discount row
+            const discountRow = document.getElementById('discountRow');
+            if (discount > 0) {
+                document.getElementById('discount').textContent = '-' + formatCurrency(discount);
+                discountRow.style.display = 'flex';
+            } else {
+                discountRow.style.display = 'none';
+            }
+            
+            // Update cart summary text
+            const cartSummary = document.getElementById('cartSummary');
+            if (cart.length === 0) {
+                cartSummary.textContent = 'Empty cart';
+            } else {
+                const totalItems = getCartCount();
+                const totalValue = formatCurrency(total);
+                cartSummary.textContent = `${totalItems} item${totalItems !== 1 ? 's' : ''} • ${totalValue}`;
+            }
+        }
+
+        // Promo code functions
+        function setPromoCode(code) {
+            document.getElementById('promoCode').value = code.toUpperCase();
+            applyPromoCode();
+        }
+
+        function applyPromoCode() {
+            const promoInput = document.getElementById('promoCode');
+            const code = promoInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                showNotification('Please enter a promo code', 'warning');
+                return;
+            }
+            
+            if (!PROMO_CODES[code]) {
+                showNotification('Invalid promo code', 'error');
+                return;
+            }
+            
+            appliedPromoCode = code;
+            const promo = PROMO_CODES[code];
+            
+            // Show applied promo
+            document.getElementById('promoName').textContent = code;
+            document.getElementById('promoDescription').textContent = promo.description;
+            document.getElementById('appliedPromo').style.display = 'block';
+            
+            // Update summary
+            updateCartSummary();
+            
+            showNotification(`Promo code ${code} applied successfully!`, 'success');
+            
+            trackEvent('promo_code_applied', {
+                code: code,
+                user: currentUser?.email || 'guest'
+            });
+        }
+
+        function removePromoCode() {
+            appliedPromoCode = null;
+            document.getElementById('appliedPromo').style.display = 'none';
+            document.getElementById('promoCode').value = '';
+            
+            updateCartSummary();
+            
+            showNotification('Promo code removed', 'info');
+            
+            trackEvent('promo_code_removed', {
+                user: currentUser?.email || 'guest'
+            });
+        }
+
+        // Display recommended products
+        function displayRecommendations() {
+            if (cart.length === 0) {
+                document.getElementById('recommendations').style.display = 'none';
+                return;
+            }
+            
+            // Get products not in cart
+            const cartIds = cart.map(item => item.id);
+            const availableProducts = getProducts().filter(p => !cartIds.includes(p.id));
+            
+            // Take first 4 products for recommendations
+            recommendedProducts = availableProducts.slice(0, 4);
+            
+            if (recommendedProducts.length === 0) {
+                document.getElementById('recommendations').style.display = 'none';
+                return;
+            }
+            
+            const recommendationsContainer = document.getElementById('recommendedProducts');
+            recommendationsContainer.innerHTML = recommendedProducts.map(product => `
+                <div class="card hover-lift" style="padding: 16px; cursor: pointer;" onclick="viewProduct(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--border-radius-sm); margin-bottom: 12px;">
+                    <h5 style="margin-bottom: 8px; font-size: 14px;">${product.name}</h5>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: var(--primary-500); font-weight: 600;">${formatCurrency(product.price)}</span>
+                        <button class="icon-btn icon-btn-sm" onclick="event.stopPropagation(); addToCart(${product.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Checkout function
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty', 'warning');
+                return;
+            }
+            
+            // Store checkout data
+            sessionStorage.setItem('dx_checkout_data', JSON.stringify({
+                items: cart,
+                subtotal: getCartTotal(),
+                discount: appliedPromoCode ? calculateDiscount(getCartTotal(), appliedPromoCode) : 0,
+                promoCode: appliedPromoCode,
+                timestamp: new Date().toISOString()
+            }));
+            
+            // Track checkout initiation
+            trackEvent('checkout_initiated', {
+                itemCount: getCartCount(),
+                totalValue: getCartTotal(),
+                promoCode: appliedPromoCode,
+                user: currentUser?.email || 'guest'
+            });
+            
+            // Redirect to checkout
+            window.location.href = 'checkout.html';
+        }
+
+        // Clear entire cart
+        function clearCart() {
+            if (cart.length === 0) return;
+            
+            if (confirm('Are you sure you want to clear your entire cart?')) {
+                clearCart();
+                loadCartPage();
+                
+                trackEvent('cart_cleared', {
+                    user: currentUser?.email || 'guest'
+                });
+            }
+        }
+
+        // Utility functions
+        function viewProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('dx_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('open');
+        }
+
+        // Auto-update cart summary when cart changes
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'dx_cart') {
+                loadCart();
+                loadCartPage();
+            }
+        });
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('dx_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+
+        console.log('🛒 Shopping Cart loaded successfully!');
+        console.log('💱 Philippine Peso calculations');
+        console.log('⚡ Real-time cart updates');
+        console.log('🏷️  Promo code system active');
+    </script>
+</body>
+</html>
