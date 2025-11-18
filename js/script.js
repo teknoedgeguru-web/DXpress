@@ -1,4 +1,4 @@
-/**
+﻿/**
  * D'Xpress E-Commerce Platform
  * Core JavaScript Functionality
  * Author: MiniMax Agent
@@ -171,7 +171,7 @@ const PRODUCTS = [
 const PROMO_CODES = {
     'SAVE10': { type: 'percentage', value: 10, description: 'Get 10% off your order' },
     'SAVE20': { type: 'percentage', value: 20, description: 'Get 20% off your order' },
-    'FLAT50': { type: 'fixed', value: 50, description: 'Get ₱50 off your order' },
+    'FLAT50': { type: 'fixed', value: 50, description: 'Get â‚±50 off your order' },
     'WELCOME': { type: 'percentage', value: 15, description: 'Get 15% off (new customers)' }
 };
 
@@ -654,7 +654,58 @@ function hasPermission(permission) {
  * Save cart to localStorage
  */
 function saveCart() {
-    localStorage.setItem('dx_cart', JSON.stringify(cart));
+    try {
+        // always keep a local mirror first
+        localStorage.setItem('dx_cart', JSON.stringify(cart));
+    } catch (err) {
+        console.warn('Failed to write dx_cart to localStorage', err);
+    }
+
+    // Attempt to sync with backend via api client if available. api.syncCart will
+    // queue the payload if offline or if the network call fails.
+    try {
+        if (window.api && typeof api.syncCart === 'function') {
+            api.syncCart(cart).then(result => {
+                if (result && result.queued) {
+                    // already queued by api
+                    trackEvent('cart_sync_queued', { items: cart.length });
+                } else {
+                    trackEvent('cart_synced', { items: cart.length });
+                }
+            }).catch(() => {
+                // network error handled inside api.syncCart
+            });
+        }
+    } catch (err) {
+        console.warn('Cart sync failed', err);
+    }
+}
+
+/**
+ * Migrate common legacy storage keys to the current `dx_` prefixed keys.
+ * This is conservative and only migrates when the target key is missing.
+ */
+function migrateStorage() {
+    const mappings = [
+        { oldKey: 'cart', newKey: 'dx_cart' },
+        { oldKey: 'wishlist', newKey: 'dx_wishlist' },
+        { oldKey: 'orders', newKey: 'dx_orders' },
+        { oldKey: 'currentUser', newKey: 'dx_current_user' },
+        { oldKey: 'realtime_updates', newKey: 'dx_realtime_updates' }
+    ];
+
+    mappings.forEach(m => {
+        try {
+            if (!localStorage.getItem(m.newKey) && localStorage.getItem(m.oldKey)) {
+                const val = localStorage.getItem(m.oldKey);
+                localStorage.setItem(m.newKey, val);
+                localStorage.removeItem(m.oldKey);
+                console.info(`Migrated localStorage ${m.oldKey} -> ${m.newKey}`);
+            }
+        } catch (err) {
+            console.warn('Migration error for', m, err);
+        }
+    });
 }
 
 /**
@@ -800,7 +851,7 @@ function showNotification(message, type = 'info') {
     notification.innerHTML = `
         <div class="notification-content">
             <span class="notification-message">${message}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">Ã—</button>
         </div>
     `;
     
@@ -973,7 +1024,8 @@ function getSessionId() {
  * Initialize the application
  */
 function initializeApp() {
-    // Load data from localStorage
+    // Run migrations for older storage shapes (if any), then load data
+    migrateStorage();
     loadCart();
     loadWishlist();
     loadOrders();
@@ -995,12 +1047,12 @@ function initializeApp() {
     });
     
     console.log('D\'Xpress E-Commerce Platform initialized successfully!');
-    console.log('💱 Currency: Philippine Peso (₱)');
-    console.log('⚡ Real-time features enabled');
-    console.log('📱 TikTok-style dashboard ready');
-    console.log('🛒 Shopping cart:', cart.length, 'items');
-    console.log('❤️  Wishlist:', wishlist.length, 'items');
-    console.log('👤 User:', currentUser ? `${currentUser.name} (${currentUser.role})` : 'Guest');
+    console.log('ðŸ’± Currency: Philippine Peso (â‚±)');
+    console.log('âš¡ Real-time features enabled');
+    console.log('ðŸ“± TikTok-style dashboard ready');
+    console.log('ðŸ›’ Shopping cart:', cart.length, 'items');
+    console.log('â¤ï¸  Wishlist:', wishlist.length, 'items');
+    console.log('ðŸ‘¤ User:', currentUser ? `${currentUser.name} (${currentUser.role})` : 'Guest');
 }
 
 // ========================================
@@ -1061,4 +1113,4 @@ window.DXpress = {
     clearAllData
 };
 
-console.log('🚀 D\'Xpress loaded successfully! Use DXpress.* to access functions.');
+console.log('ðŸš€ D\'Xpress loaded successfully! Use DXpress.* to access functions.');
