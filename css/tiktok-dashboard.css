@@ -1,0 +1,776 @@
+/**
+ * TikTok-Style Social Commerce Dashboard
+ * Author: MiniMax Agent
+ * 
+ * Revolutionary social commerce interface with:
+ * - Full-screen vertical scrolling
+ * - Social interactions (like, share, follow)
+ * - Mobile-first gestures
+ * - Dark theme optimized
+ * - Real-time feed updates
+ */
+
+/* ========================================
+   TIKTOK DASHBOARD CONTAINER
+======================================== */
+
+.tiktok-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* ========================================
+   FEED STRUCTURE
+======================================== */
+
+.tiktok-feed {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tiktok-slide {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(45deg, #000000, #111111);
+    overflow: hidden;
+}
+
+.tiktok-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(109, 40, 217, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(109, 40, 217, 0.2) 0%, transparent 50%);
+    z-index: 1;
+}
+
+/* ========================================
+   PRODUCT MEDIA SECTION
+======================================== */
+
+.product-media {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-video,
+.product-image-carousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+}
+
+.product-image-carousel {
+    display: flex;
+    transition: transform var(--transition-slow);
+}
+
+.carousel-image {
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Video overlay for play button */
+.video-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(109, 40, 217, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(8px);
+}
+
+.play-button:hover {
+    background-color: var(--primary-500);
+    transform: scale(1.1);
+}
+
+.play-button svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+    margin-left: 4px;
+}
+
+/* ========================================
+   UI OVERLAY
+======================================== */
+
+.ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Top Navigation */
+.top-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-xl);
+    background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    pointer-events: auto;
+}
+
+.tiktok-logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.nav-tab {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-weight: 500;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.nav-tab.active,
+.nav-tab:hover {
+    color: white;
+}
+
+.nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background-color: var(--primary-500);
+    border-radius: 1px;
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+}
+
+.close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* ========================================
+   BOTTOM PRODUCT INFO
+======================================== */
+
+.bottom-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35%;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.9) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-2xl);
+    pointer-events: auto;
+}
+
+.product-details {
+    margin-bottom: var(--space-lg);
+}
+
+.product-title {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+}
+
+.product-category {
+    color: var(--primary-500);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-sm);
+}
+
+.product-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: var(--space-md);
+}
+
+.product-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+}
+
+.feature-tag {
+    background-color: rgba(109, 40, 217, 0.3);
+    color: var(--primary-100);
+    padding: 4px var(--space-sm);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.product-price {
+    color: var(--primary-500);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: var(--space-lg);
+}
+
+.product-stats {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.stat-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.btn-action {
+    flex: 1;
+    height: 48px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.btn-primary-action {
+    background-color: var(--primary-500);
+    color: white;
+}
+
+.btn-primary-action:hover {
+    background-color: var(--primary-700);
+    transform: translateY(-2px);
+}
+
+.btn-secondary-action {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary-action:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================
+   RIGHT RAIL INTERACTIONS
+======================================== */
+
+.right-rail {
+    position: absolute;
+    right: var(--space-xl);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.rail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.rail-button {
+    width: 56px;
+    height: 56px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.rail-button:hover {
+    transform: scale(1.1);
+    background-color: rgba(109, 40, 217, 0.8);
+}
+
+.rail-button svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+.rail-button.liked {
+    background-color: var(--error-500);
+    animation: likeAnimation 0.6s ease-out;
+}
+
+.rail-button.followed {
+    background-color: var(--success-500);
+}
+
+.rail-count {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.vendor-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+}
+
+.vendor-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
+}
+
+.vendor-name {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    max-width: 80px;
+    word-wrap: break-word;
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes likeAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); background-color: var(--error-500); }
+    100% { transform: scale(1); }
+}
+
+@keyframes followAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.slide-transition {
+    animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-exit {
+    animation: slideOutDown 0.3s ease-in;
+}
+
+@keyframes slideOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+/* ========================================
+   FEED CONTROLS
+======================================== */
+
+.feed-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-sm);
+    z-index: 6;
+    pointer-events: auto;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.indicator.active {
+    background-color: var(--primary-500);
+    transform: scale(1.2);
+}
+
+.indicator:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================
+   MOBILE GESTURES
+======================================== */
+
+.gesture-hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 7;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    pointer-events: none;
+}
+
+.gesture-arrow {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto var(--space-sm);
+    animation: bounceArrow 2s infinite;
+}
+
+@keyframes bounceArrow {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* ========================================
+   LOADING & ERROR STATES
+======================================== */
+
+.tiktok-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #000000;
+    color: white;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.tiktok-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #000000;
+    color: white;
+    text-align: center;
+    padding: var(--space-xl);
+}
+
+.tiktok-error h3 {
+    margin-bottom: var(--space-md);
+    color: var(--error-500);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 768px) {
+    .tiktok-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .top-nav {
+        height: 60px;
+        padding: 0 var(--space-md);
+    }
+    
+    .tiktok-logo {
+        font-size: 20px;
+    }
+    
+    .nav-tabs {
+        gap: var(--space-md);
+    }
+    
+    .nav-tab {
+        font-size: 14px;
+        padding: var(--space-xs) var(--space-sm);
+    }
+    
+    .bottom-info {
+        height: 40%;
+        padding: var(--space-lg);
+    }
+    
+    .product-title {
+        font-size: 20px;
+    }
+    
+    .product-price {
+        font-size: 24px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .btn-action {
+        height: 44px;
+        font-size: 14px;
+    }
+    
+    .right-rail {
+        right: var(--space-md);
+        gap: var(--space-md);
+    }
+    
+    .rail-button {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .rail-button svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .vendor-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .vendor-name {
+        font-size: 12px;
+        max-width: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 0 var(--space-sm);
+    }
+    
+    .close-btn {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .bottom-info {
+        padding: var(--space-md);
+    }
+    
+    .product-title {
+        font-size: 18px;
+    }
+    
+    .product-description {
+        font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .product-features {
+        gap: var(--space-xs);
+    }
+    
+    .feature-tag {
+        font-size: 11px;
+        padding: 2px var(--space-xs);
+    }
+    
+    .right-rail {
+        right: var(--space-sm);
+        gap: var(--space-sm);
+    }
+    
+    .rail-button {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .rail-button svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .rail-count {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .tiktok-slide,
+    .slide-transition,
+    .slide-exit {
+        animation: none;
+    }
+    
+    .play-button:hover,
+    .rail-button:hover,
+    .btn-action:hover {
+        transform: none;
+    }
+    
+    .gesture-arrow {
+        animation: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+======================================== */
+
+@media print {
+    .tiktok-container,
+    .tiktok-feed,
+    .tiktok-slide {
+        display: none;
+    }
+}
